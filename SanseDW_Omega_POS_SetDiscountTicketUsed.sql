@@ -7,19 +7,37 @@
 */
 DROP PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed
 GO
-CREATE PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed @shopID VARCHAR(10), @ticketID VARCHAR(20), @checkID CHAR(10) = '' , @omegaPosInvoiceID VARCHAR(30)
+CREATE PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed
+   @shopID            VARCHAR(10),
+   @ticketID          VARCHAR(20),
+   @checkID           CHAR(10) = '',
+   @omegaPosInvoiceID VARCHAR(30)
 AS
-DECLARE @rtn TABLE(returnID INT, returnMessage VARCHAR(256))
+   -- 记录一下使用日志
+   
+   -- 更新一下使用标识
+   IF EXISTS ( SELECT *
+               FROM   dbo.DiscountTicket(NOLOCK) a
+               WHERE  a.DiscountTicketID = @ticketID AND
+                      a.Posted = 1 AND
+                      a.Depose = 0 AND
+                      a.PriceType = 1 AND
+                      ISNULL(a.CheckID, '') = '' )
+      BEGIN
+         UPDATE a
+         SET    a.CheckID = @checkID
+         FROM   dbo.DiscountTicket a
+         WHERE  a.DiscountTicketID = @ticketID AND
+                a.Posted = 1 AND
+                a.Depose = 0 AND
+                a.PriceType = 1 AND
+                ISNULL(a.CheckID, '') = ''
 
---要LOG一下什么核销单（销售单据）使用了这张DiscountTicket
-INSERT @rtn
-       (returnID,
-        returnMessage)
-VALUES ( 1,-- returnID - int
-         '成功' -- returnMessage - varchar(256)
-);
+         SELECT 1 returnID,'成功' returnMessage
+      END
+   ELSE
+      BEGIN
+         SELECT -1 returnID,'当前折扣卷已被使用' returnMessage
+      END
 
-SELECT a.returnID, a.returnMessage FROM @rtn a
-GO
-
-
+ 
