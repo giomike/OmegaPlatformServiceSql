@@ -10,14 +10,14 @@ GO
 CREATE PROCEDURE SanseDW_Omega_POS_CheckDiscountTicket @shopID VARCHAR(10), @tickID VARCHAR(20), @amount MONEY, @unitPriceAmount MONEY
 AS
 
-DECLARE @rtn TABLE(returnID INT, returnMessage VARCHAR(256))
+DECLARE @rtn TABLE(returnID INT, returnMessage VARCHAR(256)，discountAmount MONEY);
 
 
 INSERT @rtn
        (returnID,
-        returnMessage)
+        returnMessage, discountAmount)
 VALUES ( 1,-- returnID - int
-         '成功' -- returnMessage - varchar(256)
+         '成功', 0 -- returnMessage - varchar(256), discountAmount - money
 );
 
 INSERT @rtn
