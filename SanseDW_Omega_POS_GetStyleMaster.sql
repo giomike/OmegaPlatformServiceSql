@@ -56,6 +56,6 @@ SELECT Goods_no StyleID,
        Category2
 FROM dbo.[Goods](NOLOCK) a
 WHERE a.Brand = @brand
-  AND a.Last_update_dt > @timpStamp
+  AND a.UpdateTimestamp > @timpStamp
 ORDER BY Goods_no
 GO
