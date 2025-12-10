@@ -54,8 +54,8 @@ SELECT Goods_no StyleID,
        Definition19 Weight,
 	   Definition8 Buyer,
        Category2
-FROM dbo.[Goods](NOLOCK) 
-WHERE Category AND Brand = @brand
-  AND Last_update_dt > @timpStamp
+FROM dbo.[Goods](NOLOCK) a
+WHERE a.Brand = @brand
+  AND a.Last_update_dt > @timpStamp
 ORDER BY Goods_no
 GO
