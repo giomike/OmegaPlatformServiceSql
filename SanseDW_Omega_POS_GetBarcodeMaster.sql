@@ -21,12 +21,12 @@ AS
 SELECT a.Goods_no styleID,
        a.ColorID,
        a.Long,
-       a.SizeID,
+       a.Size,
        a.BarCode
 FROM dbo.BarCode (NOLOCK) a,
      dbo.Goods (NOLOCK) b
 WHERE a.Goods_no = b.Goods_no
-      AND b.Brand = @brandID
+      AND b.Brand = @brand
       AND a.UpdateTimestamp > @timpStamp
 ORDER BY a.Goods_no
 GO
