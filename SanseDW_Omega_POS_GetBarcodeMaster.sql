@@ -1,0 +1,32 @@
+/*
+获取条码主数据
+参数：
+    @brand NVARCHAR(50) 品牌
+    @timpStamp TIMESTAMP 时间戳
+返回值：
+    styleID 款号
+    ColorID 颜色ID
+    Long 长度
+    SizeID 尺码ID
+    BarCode 条码
+
+# 2025-12-10
+## 接口定义
+## MIKECHAN
+*/
+DROP PROCEDURE SanseDW_Omega_POS_GetBarcodeMaster
+GO
+CREATE PROCEDURE SanseDW_Omega_POS_GetBarcodeMaster @brand NVARCHAR(50), @timpStamp TIMESTAMP
+AS
+SELECT a.Goods_no styleID,
+       a.ColorID,
+       a.Long,
+       a.SizeID,
+       a.BarCode
+FROM dbo.BarCode (NOLOCK) a,
+     dbo.Goods (NOLOCK) b
+WHERE a.Goods_no = b.Goods_no
+      AND b.Brand = @brandID
+      AND a.UpdateTimestamp > @timpStamp
+ORDER BY a.Goods_no
+GO
