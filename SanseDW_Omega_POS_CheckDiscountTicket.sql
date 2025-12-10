@@ -5,8 +5,8 @@
 ## MIKE CHAN
 
 */
-DROP PROCEDURE SanseDW_Omega_POS_CheckDiscountTicket
-GO
+--DROP PROCEDURE SanseDW_Omega_POS_CheckDiscountTicket
+--GO
 CREATE PROCEDURE SanseDW_Omega_POS_CheckDiscountTicket
    @shopID          varchar(10),
    @tickID          varchar(20),
@@ -14,6 +14,8 @@ CREATE PROCEDURE SanseDW_Omega_POS_CheckDiscountTicket
    @unitPriceAmount money,
    @styleID         varchar(20)=''
 AS
+   SET NOCOUNT ON;
+
    CREATE TABLE #ticketInfo
    (
       DiscountTicketID char( 15 ),
@@ -74,7 +76,6 @@ AS
       END
 
    -- 校验折扣卷的PriceType设置，1为按照吊牌价打折，0为按照现价打折，0暂时不开放，所以这里也限制
-
    IF EXISTS ( SELECT *
                FROM   #ticketInfo a
                WHERE  a.Posted = 1 AND
@@ -110,7 +111,7 @@ AS
       BEGIN
          SET @Msg = ''
 
-         SELECT @Msg = '折扣卷当前不在有效时间内[' + CONVERT(varchar, TakeEffectDt) + ' 至 ' + CONVERT(varchar, LapseDate) + ']'
+         SELECT @Msg = '折扣卷当前不在有效时间内[' + CONVERT(VARCHAR(19), TakeEffectDt, 120) + ' 至 ' + CONVERT(VARCHAR(19), LapseDate, 120) + ']'
          FROM   #ticketInfo
 
          SELECT -6 returnID,@Msg returnMessage,1 discount
@@ -139,7 +140,6 @@ AS
 
    -- 校验折扣卷的使用门店,DiscountTicketCust没有折扣卷数据默认所有门店可用
    IF EXISTS ( SELECT *
-
                FROM   #ticketInfo a,dbo.DiscountTicketCust(NOLOCK) b
                WHERE  a.DiscountTicketID = b.DiscountTicketID )
       BEGIN
@@ -186,6 +186,5 @@ AS
    SELECT @DisCount = Discount
    FROM   #ticketInfo
 
-   SELECT 1 returnID,'可以使用' returnMessage,@DisCount discount
-
+   SELECT 1 returnID,'可以使用' returnMessage,@DisCount discount 
  

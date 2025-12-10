@@ -5,16 +5,17 @@
 ## Mike Chan
 
 */
-DROP PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed
-GO
+--DROP PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed
+--GO
 CREATE PROCEDURE SanseDW_Omega_POS_SetDiscountTicketUsed
-   @shopID            VARCHAR(10),
-   @ticketID          VARCHAR(20),
-   @checkID           CHAR(10) = '',
-   @omegaPosInvoiceID VARCHAR(30)
+   @shopID            varchar(10),
+   @ticketID          varchar(20),
+   @checkID           char(10) = '',
+   @omegaPosInvoiceID varchar(30)
 AS
+   SET NOCOUNT ON;
+
    -- 记录一下使用日志
-   
    -- 更新一下使用标识
    IF EXISTS ( SELECT *
                FROM   dbo.DiscountTicket(NOLOCK) a
@@ -34,10 +35,11 @@ AS
                 ISNULL(a.CheckID, '') = ''
 
          SELECT 1 returnID,'成功' returnMessage
+
+		 COMMIT;
       END
    ELSE
       BEGIN
          SELECT -1 returnID,'当前折扣卷已被使用' returnMessage
-      END
-
+      END 
  
