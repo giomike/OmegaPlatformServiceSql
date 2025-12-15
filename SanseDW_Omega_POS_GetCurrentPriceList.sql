@@ -13,6 +13,8 @@
 CREATE PROCEDURE SanseDW_Omega_POS_GetCurrentPriceList
    @shopID varchar(10)
 AS
+   SET NOCOUNT ON;
+
    -- 先全部获取满足生效时间的活动
    SELECT a.*
    INTO   #SPromoEx
@@ -83,9 +85,8 @@ AS
                     INNER JOIN dbo.SPromoExSpType7(NOLOCK) c ON a.SPromoID = c.SPromoID
                     LEFT JOIN dbo.SPromoExProp(NOLOCK) d ON a.SPromoID = d.SPromoID AND
                                                             d.Name = 'VipNotDiscount' )
-   SELECT Goods_No AS StyleID,PriceType,UnitPrice AS Price,TakeEffectDate AS StartDate,LapseDate AS EndDate
+   SELECT @shopID AS ShopID, Goods_No AS StyleID,PriceType,UnitPrice AS Price,TakeEffectDate AS StartDate,LapseDate AS EndDate, [Description] Descr
    --SPromoID, SPromoTypeID, Description, TakeEffectDate, LapseDate, Goods_No, IsDiscount, Discount, UnitPrice, Priority, PriceType
    FROM   RankedPromotions
    WHERE  rn = 1 -- 只取每个商品的最高优先级记录
    ORDER  BY Priority,Goods_No; 
- 
