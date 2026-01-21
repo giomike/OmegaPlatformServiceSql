@@ -35,6 +35,7 @@ DROP PROCEDURE SanseDW_Omega_POS_GetStyleMaster
 GO
 CREATE PROCEDURE SanseDW_Omega_POS_GetStyleMaster @brand NVARCHAR(50), @timpStamp TIMESTAMP
 AS
+SET NOCOUNT ON
 SELECT Goods_no StyleID,
        Goods_name NAME,
        ISNULL([Range], '') [Range],
@@ -53,9 +54,13 @@ SELECT Goods_no StyleID,
        Definition2 StockAge,
        Definition19 Weight,
 	   Definition8 Buyer,
-       Category2
+       Category2,
+       UpdateTimestamp
 FROM dbo.[Goods](NOLOCK) a
 WHERE a.Brand = @brand
   AND a.UpdateTimestamp > @timpStamp
-ORDER BY Goods_no
+ORDER BY UpdateTimestamp
 GO
+exec SanseDW_Omega_POS_GetStyleMaster 'MM', 0x00000000BFFC298B
+go
+

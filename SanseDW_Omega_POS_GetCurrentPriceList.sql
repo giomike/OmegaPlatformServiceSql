@@ -8,8 +8,8 @@
 ## 逻辑实现
 ## WDP
 */
---DROP PROCEDURE SanseDW_Omega_POS_GetCurrentPriceList
---GO
+DROP PROCEDURE SanseDW_Omega_POS_GetCurrentPriceList
+GO
 CREATE PROCEDURE SanseDW_Omega_POS_GetCurrentPriceList
    @shopID varchar(10)
 AS
